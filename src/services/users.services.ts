@@ -8,6 +8,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
 import { USERS_MESSAGE } from '~/constants/messages'
+import { update } from 'lodash'
 config()
 class UsersService {
   private signAccessToken(user_id: string) {
@@ -41,6 +42,18 @@ class UsersService {
         token_type: TokenType.EmailVerifyToken
       },
       privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
+      options: {
+        expiresIn: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN
+      }
+    })
+  }
+  private signForgotPasswordToken(user_id: string) {
+    return signToken({
+      payload: {
+        user_id,
+        token_type: TokenType.ForgotPasswordToken
+      },
+      privateKey: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
       options: {
         expiresIn: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN
       }
@@ -139,6 +152,27 @@ class UsersService {
     )
     return {
       message: USERS_MESSAGE.RESEND_VERIFY_EMAIL_SUCCESS
+    }
+  }
+  async forgotPassword(user_id: string) {
+    const forgotPasswordToken = await this.signForgotPasswordToken(user_id)
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      [
+        {
+          $set: {
+            forgot_password_token: forgotPasswordToken,
+            update_at: '$$NOW'
+          }
+        }
+      ]
+    )
+    // Gửi email kèm đường link đến email người dùng: https://twitter.com/forgot-password?token=token
+    console.log('forgot password token: ', forgotPasswordToken)
+    return {
+      message: USERS_MESSAGE.CHECK_EMAIL_TO_RESET_PASSWORD
     }
   }
 }
