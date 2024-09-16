@@ -154,3 +154,10 @@ export const updateMeController = async (req: Request<ParamsDictionary, any, Upd
     result: user
   })
 }
+
+export const followController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { followed_user_id } = req.body
+  const result = await usersService.follow(user_id, followed_user_id)
+  return res.json(result)
+}

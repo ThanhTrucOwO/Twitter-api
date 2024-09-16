@@ -13,7 +13,7 @@ export interface UpdateMeReqBody {
 }
 
 export interface FollowReqBody {
-  user_id: string
+  followed_user_id: string
 }
 
 export interface LoginReqBody {
