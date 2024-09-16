@@ -12,6 +12,10 @@ export interface UpdateMeReqBody {
   cover_photo?: string
 }
 
+export interface FollowReqBody {
+  user_id: string
+}
+
 export interface LoginReqBody {
   email: string
   password: string
@@ -19,6 +23,10 @@ export interface LoginReqBody {
 
 export interface VerifyEmailReqBody {
   email_verify_token: string
+}
+
+export interface GetProfileReqParams {
+  username: string
 }
 
 export interface ResetPasswordReqBody {
