@@ -17,5 +17,4 @@ export const uploadSingleImageController = async (req: Request, res: Response, n
       message: 'Upload image successfully'
     })
   })
-  return res.json({ message: 'hehe' })
 }
