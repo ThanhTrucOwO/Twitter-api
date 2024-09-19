@@ -11,7 +11,6 @@ config()
 databaseService.connect()
 const app = express()
 const port = process.env.PORT || 4000
-console.log(process.env.PORT)
 // Tạo folder upload
 initFolder()
 
