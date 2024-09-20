@@ -49,7 +49,7 @@ export const handleUploadImage = async (req: Request) => {
 // Cách xử lý khi upload video và encode
 // Có 2 giai đoạn
 // Upload video: Upload video thành công thì resolve về cho người dùng
-// Encode video: Sau khi upload video xong, encode video thành công thì resolve về cho người dùng
+// Encode video: Khai báo thêm 1 url endpoint để check xem cái video đó đã encode xong chưa
 
 export const handleUploadVideo = async (req: Request) => {
   const formidable = (await import('formidable')).default

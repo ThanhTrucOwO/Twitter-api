@@ -2,7 +2,10 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { Link } from 'react-router-dom'
-
+import { MediaPlayer, MediaProvider } from '@vidstack/react'
+import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default'
+import '@vidstack/react/player/styles/default/theme.css'
+import '@vidstack/react/player/styles/default/layouts/video.css'
 const getGoogleAuthUrl = () => {
   const { VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI } = import.meta.env
   const url = `https://accounts.google.com/o/oauth2/v2/auth`
@@ -42,6 +45,11 @@ export default function Home() {
       <video controls width={500}>
         <source src='http://localhost:4000/static/video-stream/3c7b77cecbb29cf5809a23700.mp4' type='video/mp4' />
       </video>
+      <h2>HLS Streaming</h2>
+      <MediaPlayer src='http://localhost:4000/static/video-hls/ReiSuGTV-PXCEoH0XjbYc/master.m3u8'>
+        <MediaProvider />
+        <DefaultVideoLayout icons={defaultLayoutIcons} />
+      </MediaPlayer>
       <h1>Google OAuth 2.0</h1>
       <p className='read-the-docs'>
         {isAuthenticated ? (

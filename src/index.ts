@@ -7,9 +7,11 @@ import { initFolder } from './utils/file'
 import { config } from 'dotenv'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRoutes from './routes/static.routes'
+import cors from 'cors'
 config()
 databaseService.connect()
 const app = express()
+app.use(cors())
 const port = process.env.PORT || 4000
 // Tạo folder upload
 initFolder()
