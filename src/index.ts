@@ -8,8 +8,9 @@ import { config } from 'dotenv'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRoutes from './routes/static.routes'
 import cors from 'cors'
+
 config()
-databaseService.connect()
+databaseService.connect().then(() => databaseService.indexUsers())
 const app = express()
 app.use(cors())
 const port = process.env.PORT || 4000
@@ -27,3 +28,24 @@ app.use(defaultErrorHandler)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+// const mgclient = new MongoClient(
+//   `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@facebook.plk13.mongodb.net/?retryWrites=true&w=majority&appName=Facebook`
+// )
+
+// const db = mgclient.db('earth')
+// // Tạo 1000 document vào collection users
+// const users = db.collection('users')
+// const usersData = []
+// function getRandomNumber() {
+//   return Math.floor(Math.random() * 100) + 1
+// }
+
+// for (let i = 0; i < 1000; i++) {
+//   usersData.push({
+//     name: 'user' + (i + 1),
+//     age: getRandomNumber(),
+//     sex: i % 2 === 0 ? 'male' : 'female'
+//   })
+// }
+// users.insertMany(usersData)
