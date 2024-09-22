@@ -4,6 +4,7 @@ import User from '~/models/schemas/User.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Follower from '~/models/schemas/Follower.schemas'
 import VideoStatus from '~/models/schemas/VideoStatus.schemas'
+import Tweet from '~/models/schemas/Tweet.schemas'
 config()
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@facebook.plk13.mongodb.net/?retryWrites=true&w=majority&appName=Facebook`
 
@@ -56,6 +57,10 @@ class DatabaseService {
     if (!exist) {
       this.followers.createIndex({ user_id: 1, followed_user_id: 1 })
     }
+  }
+
+  get tweets(): Collection<Tweet> {
+    return this.db.collection(process.env.DB_TWEETS_COLLECTION as string)
   }
 
   get users(): Collection<User> {
