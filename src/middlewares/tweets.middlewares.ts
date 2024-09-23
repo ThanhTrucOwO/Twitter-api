@@ -124,7 +124,7 @@ export const tweetIdValidator = validate(
               .aggregate<Tweet>([
                 {
                   $match: {
-                    _id: new ObjectId('66f1218816e005083e359b54')
+                    _id: new ObjectId(value)
                   }
                 },
                 {
@@ -199,7 +199,7 @@ export const tweetIdValidator = validate(
                           },
                           as: 'item',
                           cond: {
-                            $eq: ['$$item.type', 1]
+                            $eq: ['$$item.type', TweetType.Retweet]
                           }
                         }
                       }
@@ -212,7 +212,7 @@ export const tweetIdValidator = validate(
                           },
                           as: 'item',
                           cond: {
-                            $eq: ['$$item.type', 2]
+                            $eq: ['$$item.type', TweetType.Comment]
                           }
                         }
                       }
@@ -225,7 +225,7 @@ export const tweetIdValidator = validate(
                           },
                           as: 'item',
                           cond: {
-                            $eq: ['$$item.type', 3]
+                            $eq: ['$$item.type', TweetType.QuoteTweet]
                           }
                         }
                       }
