@@ -7,7 +7,7 @@ import { TokenType, UserVerifyStatus } from '~/constants/enums'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
-import { USERS_MESSAGE } from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import { update } from 'lodash'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
@@ -199,7 +199,7 @@ class UsersService {
     const userInfo = await this.getGoogleUserInfo(access_token, id_token)
     if (!userInfo.verified_email) {
       throw new ErrorWithStatus({
-        message: USERS_MESSAGE.GMAIL_NOT_VERIFIED,
+        message: USERS_MESSAGES.GMAIL_NOT_VERIFIED,
         status: HTTP_STATUS.BAD_REQUEST
       })
     }
@@ -254,7 +254,7 @@ class UsersService {
   async logout(refresh_token: string) {
     await databaseService.refreshTokens.deleteOne({ token: refresh_token })
     return {
-      message: USERS_MESSAGE.LOGOUT_SUCCESS
+      message: USERS_MESSAGES.LOGOUT_SUCCESS
     }
   }
   async verifyEmail(user_id: string) {
@@ -311,7 +311,7 @@ class UsersService {
       }
     )
     return {
-      message: USERS_MESSAGE.RESEND_VERIFY_EMAIL_SUCCESS
+      message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
     }
   }
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
@@ -335,7 +335,7 @@ class UsersService {
     // Gửi email kèm đường link đến email người dùng: https://twitter.com/forgot-password?token=token
     console.log('forgot password token: ', forgotPasswordToken)
     return {
-      message: USERS_MESSAGE.CHECK_EMAIL_TO_RESET_PASSWORD
+      message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
     }
   }
   async resetPassword(user_id: string, password: string) {
@@ -354,7 +354,7 @@ class UsersService {
       ]
     )
     return {
-      message: USERS_MESSAGE.RESET_PASSWORD_SUCCESS
+      message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS
     }
   }
   async getMe(user_id: string) {
@@ -386,7 +386,7 @@ class UsersService {
     )
     if (user === null) {
       throw new ErrorWithStatus({
-        message: USERS_MESSAGE.USER_NOT_FOUND,
+        message: USERS_MESSAGES.USER_NOT_FOUND,
         status: HTTP_STATUS.NOT_FOUND
       })
     }
@@ -430,11 +430,11 @@ class UsersService {
         })
       )
       return {
-        message: USERS_MESSAGE.FOLLOW_SUCCESS
+        message: USERS_MESSAGES.FOLLOW_SUCCESS
       }
     }
     return {
-      message: USERS_MESSAGE.FOLLOWED
+      message: USERS_MESSAGES.FOLLOWED
     }
   }
   async unfollow(user_id: string, followed_user_id: string) {
@@ -446,7 +446,7 @@ class UsersService {
     // nghĩa là chưa follow người này
     if (follower === null) {
       return {
-        message: USERS_MESSAGE.ALREADY_UNFOLLOWED
+        message: USERS_MESSAGES.ALREADY_UNFOLLOWED
       }
     }
     // Tìm thấy document follower
@@ -456,7 +456,7 @@ class UsersService {
       followed_user_id: new ObjectId(followed_user_id)
     })
     return {
-      message: USERS_MESSAGE.UNFOLLOW_SUCCESS
+      message: USERS_MESSAGES.UNFOLLOW_SUCCESS
     }
   }
   async changePassword(user_id: string, new_password: string) {
@@ -474,7 +474,7 @@ class UsersService {
       }
     )
     return {
-      message: USERS_MESSAGE.CHANGE_PASSWORD_SUCCESS
+      message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESS
     }
   }
 }

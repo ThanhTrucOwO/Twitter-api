@@ -6,7 +6,7 @@ import { pick, result } from 'lodash'
 import { ObjectId } from 'mongodb'
 import { UserVerifyStatus } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { USERS_MESSAGE } from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import {
   ChangePasswordReqBody,
   FollowReqBody,
@@ -33,7 +33,7 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
   const user_id = user._id as ObjectId
   const result = await usersService.login({ user_id: user_id.toString(), verify: user.verify })
   return res.json({
-    message: USERS_MESSAGE.LOGIN_SUCCESS,
+    message: USERS_MESSAGES.LOGIN_SUCCESS,
     result
   })
 }
@@ -54,7 +54,7 @@ export const registerController = async (
   const result = await usersService.register(req.body)
   // await databaseService.users.find({})
   return res.json({
-    message: USERS_MESSAGE.REGISTER_SUCCESS,
+    message: USERS_MESSAGES.REGISTER_SUCCESS,
     result
   })
 }
@@ -73,7 +73,7 @@ export const refreshTokenController = async (
   const { user_id, verify, exp } = req.decoded_refresh_token as TokenPayload
   const result = await usersService.refreshToken({ user_id, refresh_token, verify, exp })
   return res.json({
-    message: USERS_MESSAGE.REFRESH_TOKEN_SUCCESS,
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
     result
   })
 }
@@ -88,7 +88,7 @@ export const verifyEmailController = async (
   // Nếu không tìm thấy user thì báo lỗi
   if (!user) {
     return res.status(HTTP_STATUS.NOT_FOUND).json({
-      message: USERS_MESSAGE.USER_NOT_FOUND
+      message: USERS_MESSAGES.USER_NOT_FOUND
     })
   }
   // Đã verify rồi thì sẽ không báo lỗi
@@ -96,12 +96,12 @@ export const verifyEmailController = async (
 
   if (user.email_verify_token === '') {
     return res.json({
-      message: USERS_MESSAGE.EMAIL_ALREADY_VERIFIED_BEFORE
+      message: USERS_MESSAGES.EMAIL_ALREADY_VERIFIED_BEFORE
     })
   }
   const result = await usersService.verifyEmail(user_id)
   return res.json({
-    message: USERS_MESSAGE.EMAIL_VERIFY_SUCCESS,
+    message: USERS_MESSAGES.EMAIL_VERIFY_SUCCESS,
     result
   })
 }
@@ -111,12 +111,12 @@ export const resendVerifyEmailController = async (req: Request, res: Response, n
   const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
   if (!user) {
     return res.status(HTTP_STATUS.NOT_FOUND).json({
-      message: USERS_MESSAGE.USER_NOT_FOUND
+      message: USERS_MESSAGES.USER_NOT_FOUND
     })
   }
   if (user.verify === UserVerifyStatus.Verified) {
     return res.json({
-      message: USERS_MESSAGE.EMAIL_ALREADY_VERIFIED_BEFORE
+      message: USERS_MESSAGES.EMAIL_ALREADY_VERIFIED_BEFORE
     })
   }
   const result = await usersService.resendVerifyEmail(user_id)
@@ -139,7 +139,7 @@ export const verifyForgotPasswordController = async (
   next: NextFunction
 ) => {
   return res.json({
-    message: USERS_MESSAGE.VERIFY_FORGOT_PASSWORD_SUCCESS
+    message: USERS_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS
   })
 }
 
@@ -158,7 +158,7 @@ export const getMeController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const user = await usersService.getMe(user_id)
   return res.json({
-    message: USERS_MESSAGE.GET_MY_PROFILE_SUCCESS,
+    message: USERS_MESSAGES.GET_MY_PROFILE_SUCCESS,
     result: user
   })
 }
@@ -167,7 +167,7 @@ export const getProfileController = async (req: Request<GetProfileReqParams>, re
   const { username } = req.params
   const user = await usersService.getProfile(username)
   return res.json({
-    message: USERS_MESSAGE.GET_PROFILE_SUCCESS,
+    message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
     result: user
   })
 }
@@ -177,7 +177,7 @@ export const updateMeController = async (req: Request<ParamsDictionary, any, Upd
   const { body } = req
   const user = await usersService.updateMe(user_id, body)
   return res.json({
-    message: USERS_MESSAGE.UPDATE_ME_SUCCESS,
+    message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
     result: user
   })
 }

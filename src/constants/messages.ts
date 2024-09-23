@@ -1,4 +1,4 @@
-export const USERS_MESSAGE = {
+export const USERS_MESSAGES = {
   VALIDATION_ERROR: 'Validation error',
   NAME_IS_REQUIRED: 'Name is required',
   NAME_MUST_BE_A_STRING: 'Name must be a string',
@@ -78,7 +78,8 @@ export const TWEETS_MESSAGES = {
   CREATE_TWEEET_SUCCESSFULLY: 'Create tweet Successfully',
   INVALID_TWEET_ID: 'Invalid tweet id',
   TWEET_NOT_FOUND: 'Tweet not found',
-  GET_TWEET_SUCCESSFULLY: 'Get tweet successfully'
+  GET_TWEET_SUCCESSFULLY: 'Get tweet successfully',
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public'
 } as const
 
 export const BOOKMARKS_MESSAGES = {
