@@ -93,3 +93,7 @@ export const LIKES_MESSAGES = {
   LIKE_SUCCESSFULLY: 'Like successfully',
   UNLIKE_SUCCESSFULLY: 'Unlike successfully'
 } as const
+
+export const SEARCH_MESSAGES = {
+  SEARCH_SUCCESSFULLY: 'Search successfully'
+} as const
