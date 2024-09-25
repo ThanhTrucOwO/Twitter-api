@@ -30,16 +30,18 @@ class DatabaseService {
   }
 
   async indexUsers() {
-    const exist = await this.users.indexExists(['email_1_password_1', 'email_1', 'username_1'])
-    if (!exist) {
+    const exists = await this.users.indexExists(['email_1_password_1', 'email_1', 'username_1'])
+
+    if (!exists) {
       this.users.createIndex({ email: 1, password: 1 })
       this.users.createIndex({ email: 1 }, { unique: true })
       this.users.createIndex({ username: 1 }, { unique: true })
     }
   }
   async indexRefreshTokens() {
-    const exist = await this.refreshTokens.indexExists(['token_1', 'exp_1'])
-    if (!exist) {
+    const exists = await this.refreshTokens.indexExists(['exp_1', 'token_1'])
+
+    if (!exists) {
       this.refreshTokens.createIndex({ token: 1 })
       this.refreshTokens.createIndex(
         { exp: 1 },
@@ -50,15 +52,22 @@ class DatabaseService {
     }
   }
   async indexVideoStatus() {
-    const exist = await this.videoStatus.indexExists(['name_1'])
-    if (!exist) {
+    const exists = await this.videoStatus.indexExists(['name_1'])
+
+    if (!exists) {
       this.videoStatus.createIndex({ name: 1 })
     }
   }
   async indexFollowers() {
-    const exist = await this.followers.indexExists(['user_id_1_followed_user_id_1'])
-    if (!exist) {
+    const exists = await this.followers.indexExists(['user_id_1_followed_user_id_1'])
+    if (!exists) {
       this.followers.createIndex({ user_id: 1, followed_user_id: 1 })
+    }
+  }
+  async indexTweets() {
+    const exists = await this.tweets.indexExists(['content_text'])
+    if (!exists) {
+      this.tweets.createIndex({ content: 'text' }, { default_language: 'none' })
     }
   }
 
