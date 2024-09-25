@@ -12,7 +12,10 @@ import tweetsRouter from './routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
+import { MediaTypeQuery } from './constants/enums'
 // import '~/utils/fake'
+
+console.log(MediaTypeQuery)
 
 config()
 databaseService.connect().then(() => {
