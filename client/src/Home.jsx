@@ -46,7 +46,7 @@ export default function Home() {
         <source src='http://localhost:4000/static/video-stream/3c7b77cecbb29cf5809a23700.mp4' type='video/mp4' />
       </video>
       <h2>HLS Streaming</h2>
-      <MediaPlayer src='http://localhost:4000/static/video-hls/ReiSuGTV-PXCEoH0XjbYc/master.m3u8'>
+      <MediaPlayer src='http://localhost:4000/static/video-hls/Hh_y0Ni7jPqvoHM4c3mzP/master.m3u8'>
         <MediaProvider />
         <DefaultVideoLayout icons={defaultLayoutIcons} />
       </MediaPlayer>
