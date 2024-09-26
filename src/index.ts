@@ -12,9 +12,9 @@ import tweetsRouter from './routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
-import { MediaTypeQuery } from './constants/enums'
 import path from 'path'
 // import '~/utils/fake'
+import '~/utils/s3'
 
 console.log(path.resolve())
 
