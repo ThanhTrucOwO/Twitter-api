@@ -14,9 +14,8 @@ import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
 import path from 'path'
 // import '~/utils/fake'
-import '~/utils/s3'
-
-console.log(path.resolve())
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 
 config()
 databaseService.connect().then(() => {
@@ -27,6 +26,7 @@ databaseService.connect().then(() => {
   databaseService.indexTweets()
 })
 const app = express()
+const httpServer = createServer(app)
 app.use(cors())
 const port = process.env.PORT || 4000
 // Tạo folder upload
@@ -44,7 +44,27 @@ app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 // app.use('/static', express.static(UPLOAD_IMAGE_DIR))
 
 app.use(defaultErrorHandler)
-app.listen(port, () => {
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000'
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log(`User ${socket.id} connected`)
+  socket.on('disconnect', () => {
+    console.log(`User ${socket.id} disconnected`)
+  })
+  socket.on('hello', (agr) => {
+    console.log(agr)
+  })
+  socket.emit('hi', {
+    message: `Xin chào ${socket.id} đã kết nối thành công`
+  })
+})
+
+httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
