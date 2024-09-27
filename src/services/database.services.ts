@@ -8,6 +8,7 @@ import Tweet from '~/models/schemas/Tweet.schemas'
 import Hashtag from '~/models/schemas/Hashtag.schemas'
 import Bookmark from '~/models/schemas/Bookmark.schemas'
 import Like from '~/models/schemas/Like.schemas'
+import Conversation from '~/models/schemas/Conversations.schemas'
 config()
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@facebook.plk13.mongodb.net/?retryWrites=true&w=majority&appName=Facebook`
 
@@ -97,6 +98,9 @@ class DatabaseService {
   }
   get likes(): Collection<Like> {
     return this.db.collection(process.env.DB_LIKES_COLLECTION as string)
+  }
+  get conversations(): Collection<Conversation> {
+    return this.db.collection(process.env.DB_CONVERSATIONS_COLLECTION as string)
   }
 }
 
