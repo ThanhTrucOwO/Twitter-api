@@ -16,6 +16,8 @@ import searchRouter from './routes/search.routes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import Conversation from './models/schemas/Conversations.schemas'
+import conversationsRouter from './routes/conversations.routes'
+import { ObjectId } from 'mongodb'
 
 config()
 databaseService.connect().then(() => {
@@ -39,6 +41,7 @@ app.use('/tweets', tweetsRouter)
 app.use('/bookmarks', bookmarksRouter)
 app.use('/likes', likesRouter)
 app.use('/search', searchRouter)
+app.use('/conversations', conversationsRouter)
 app.use('/static', staticRoutes)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 // app.use('/static', express.static(UPLOAD_IMAGE_DIR))
@@ -69,8 +72,8 @@ io.on('connection', (socket) => {
     }
     await databaseService.conversations.insertOne(
       new Conversation({
-        sender_id: data.from,
-        receiver_id: data.to,
+        sender_id: new ObjectId(data.from),
+        receiver_id: new ObjectId(data.to),
         content: data.content
       })
     )
