@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react'
 import socket from './socket'
 import axios from 'axios'
+import InfiniteScroll from 'react-infinite-scroll-component'
+
+const usernames = [
+  {
+    name: 'user1',
+    value: 'user66f0e29582f325d44fe7a7e2'
+  },
+  {
+    name: 'user2',
+    value: 'user66f4b65545a4f884a5fb53f7'
+  }
+]
+
+const LIMIT = 10
+const PAGE = 1
 
 export default function Chat() {
   const profile = JSON.parse(localStorage.getItem('profile'))
-  const usernames = [
-    {
-      name: 'user1',
-      value: 'user66f4b65545a4f884a5fb53f7'
-    },
-    {
-      name: 'user2',
-      value: 'user66f0e29582f325d44fe7a7e2'
-    }
-  ]
   const [value, setValue] = useState('')
   const [conversations, setConversations] = useState([])
   const [receiver, setReceiver] = useState('')
+  const [pagination, setPagination] = useState({
+    page: PAGE,
+    total_page: 0
+  })
   const getProfile = (username) => {
     axios
       .get(`/users/${username}`, {
@@ -50,15 +59,45 @@ export default function Chat() {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`
           },
           params: {
-            limit: 10,
-            page: 1
+            limit: LIMIT,
+            page: PAGE
           }
         })
         .then((res) => {
-          setConversations(res.data.result.conversations)
+          const { conversations, page, total_page } = res.data.result
+          setConversations(conversations)
+          setPagination({
+            page,
+            total_page
+          })
         })
     }
   }, [receiver])
+
+  const fetchMoreConversations = () => {
+    console.log(pagination)
+    if (receiver && pagination.page < pagination.total_page) {
+      axios
+        .get(`/conversations/receivers/${receiver}`, {
+          baseURL: import.meta.env.VITE_API_URL,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          },
+          params: {
+            limit: LIMIT,
+            page: pagination.page + 1
+          }
+        })
+        .then((res) => {
+          const { conversations, page, total_page } = res.data.result
+          setConversations((prev) => [...prev, ...conversations])
+          setPagination({
+            page,
+            total_page
+          })
+        })
+    }
+  }
 
   const send = (e) => {
     e.preventDefault()
@@ -72,11 +111,11 @@ export default function Chat() {
       payload: conversation
     })
     setConversations((conversations) => [
-      ...conversations,
       {
         ...conversation,
         _id: new Date().getTime()
-      }
+      },
+      ...conversations
     ])
   }
 
@@ -90,17 +129,38 @@ export default function Chat() {
           </div>
         ))}
       </div>
-      <div className='chat'>
-        {conversations.map((conversation) => (
-          <div key={conversations._id}>
-            <div className='message-container'>
-              <div className={'message ' + (conversation.sender_id === profile._id ? 'message-right' : '')}>
-                {conversation.content}
+      <div
+        id='scrollableDiv'
+        style={{
+          height: 300,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column-reverse'
+        }}
+      >
+        {/*Put the scroll bar always on the bottom*/}
+        <InfiniteScroll
+          dataLength={conversations.length}
+          next={fetchMoreConversations}
+          style={{ display: 'flex', flexDirection: 'column-reverse' }} //To put endMessage and loader to the top.
+          inverse={true} //
+          hasMore={pagination.page < pagination.total_page}
+          loader={<h4>Loading...</h4>}
+          scrollableTarget='scrollableDiv'
+        >
+          {conversations.map((conversation) => (
+            <div key={conversations._id}>
+              <div className='message-container'>
+                <div className={'message ' + (conversation.sender_id === profile._id ? 'message-right' : '')}>
+                  {conversation.content}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </InfiniteScroll>
       </div>
+
+      {/* <div className='chat'></div> */}
       <form onSubmit={send}>
         <input type='text' onChange={(e) => setValue(e.target.value)} value={value} />
         <button type='submit'>Send</button>
