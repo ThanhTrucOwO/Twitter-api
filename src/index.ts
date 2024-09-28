@@ -78,6 +78,7 @@ io.use(async (socket, next) => {
     }
     // Truyền decoded_authorization vào socket để sử dụng ở các middleware khác
     socket.handshake.auth.decoded_authorization = decoded_authorization
+    socket.handshake.auth.access_token = access_token
     next()
   } catch (error) {
     next({
@@ -93,11 +94,25 @@ io.on('connection', (socket) => {
   users[user_id] = {
     socket_id: socket.id
   }
-  console.log(users)
+  socket.use(async (packet, next) => {
+    const { access_token } = socket.handshake.auth
+    try {
+      await verifyAccessToken(access_token)
+      next()
+    } catch (error) {
+      next(new Error('Unauthorized'))
+    }
+  })
+
+  socket.on('error', (error) => {
+    if (error.message === 'Unauthorized') {
+      socket.disconnect
+    }
+  })
   socket.on('send_message', async (data) => {
+    console.log(data)
     const { receiver_id, sender_id, content } = data.payload
     const receiver_socket_id = users[receiver_id]?.socket_id
-
     const conversation = new Conversation({
       sender_id: new ObjectId(sender_id),
       receiver_id: new ObjectId(receiver_id),
