@@ -21,6 +21,7 @@ import fs from 'fs'
 import path from 'path'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
+import { envConfig } from './constants/config'
 // const file = fs.readFileSync(path.resolve('twitter-swagger.yaml'), 'utf8')
 // const swaggerDocument = YAML.parse(file)
 const options: swaggerJSDoc.Options = {
@@ -46,7 +47,7 @@ databaseService.connect().then(() => {
 const app = express()
 const httpServer = createServer(app)
 app.use(cors())
-const port = process.env.PORT || 4000
+const port = envConfig.port
 
 // Tạo folder upload
 initFolder()
