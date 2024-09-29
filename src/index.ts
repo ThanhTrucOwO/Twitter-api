@@ -16,6 +16,24 @@ import searchRouter from './routes/search.routes'
 import { createServer } from 'http'
 import conversationsRouter from './routes/conversations.routes'
 import initSocket from './utils/socket'
+import YAML from 'yaml'
+import fs from 'fs'
+import path from 'path'
+import swaggerUi from 'swagger-ui-express'
+import swaggerJSDoc from 'swagger-jsdoc'
+// const file = fs.readFileSync(path.resolve('twitter-swagger.yaml'), 'utf8')
+// const swaggerDocument = YAML.parse(file)
+const options: swaggerJSDoc.Options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'X clone (Twitter API)',
+      version: '1.0.0'
+    }
+  },
+  apis: ['./openapi/*.yaml'] // files containing annotations as above
+}
+const openapiSpecification = swaggerJSDoc(options)
 
 config()
 databaseService.connect().then(() => {
@@ -29,10 +47,11 @@ const app = express()
 const httpServer = createServer(app)
 app.use(cors())
 const port = process.env.PORT || 4000
+
 // Tạo folder upload
 initFolder()
-
 app.use(express.json())
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/tweets', tweetsRouter)
